@@ -69,19 +69,25 @@ class Interference:
         return grids
 
 
-class GaussianBlur(Interference):
+class RandomGaussianBlur(Interference):
 
-    def __init__(self, r, sigma):
+    def __init__(self, min_r, max_r, min_sigma, max_sigma):
         """
-        Gaussian blur with radius `r` and deviation `sigma`
-        :param r: radius
-        :param sigma: deviation
+        Gaussian blur with random radius [min_r, max_r] and random sigma [min_sigma, max_sigma]
+        :param min_r: minimum radius
+        :param max_r: maximum radius
+        :param min_sigma: minimum sigma
+        :param max_sigma: maximum sigma
         """
-        self.r = r
-        self.sigma = sigma
+        self.min_r = min_r
+        self.max_r = max_r
+        self.sigma_range = max_sigma - min_sigma
+        self.sigma_bias = min_sigma
 
     def interfere(self, img):
-        return cv.GaussianBlur(img, (self.r, self.r), self.sigma)
+        r = rd.randint(self.min_r, self.max_r)
+        sigma = rd.random() * self.sigma_range + self.sigma_bias
+        return cv.GaussianBlur(img, (r, r), sigma)
 
 
 class RandomTranslate(Interference):
