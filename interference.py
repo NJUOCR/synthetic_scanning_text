@@ -1,11 +1,50 @@
-import cv2 as cv
 import random as rd
+import numpy as np
+import cv2 as cv
 
 
 class Interference:
 
     def interfere(self, img):
         raise Exception("interfere function not implement")
+
+    @staticmethod
+    def get_bounds(img):
+        """
+        Get the minimum rectangle box containing the text. This method assumes that:
+            1. there is no noise in the given image
+            2. background color is white(255)
+        :param img: input image
+        :return: top, left, bottom, right
+        > FYI: image_height = bottom - top, image_width = right - left
+        """
+        h, w = img.shape
+        white_line = np.ones((h,), float) * 255
+        for left in range(w):
+            if not (img[:, left] == white_line).all():
+                break
+        else:
+            left = None
+
+        for right in range(w-1, -1, -1):
+            if not (img[:, right] == white_line).all():
+                break
+        else:
+            right = None
+
+        for top in range(h):
+            if not (img[top, :] == white_line).all():
+                break
+        else:
+            top = None
+
+        for bottom in range(h-1, -1, -1):
+            if not (img[bottom, :] == white_line).all():
+                break
+        else:
+            bottom = None
+
+        return top, left, bottom, right
 
     @staticmethod
     def make_grid(img, x_num: tuple, y_num: tuple) -> list:
@@ -24,7 +63,7 @@ class Interference:
         grids = []
         for i in range(y):
             for j in range(x):
-                grids.append(img[i*dy:(i+1)*dy, j*dx:(j+1)*dx])
+                grids.append(img[i * dy:(i + 1) * dy, j * dx:(j + 1) * dx])
         return grids
 
 
