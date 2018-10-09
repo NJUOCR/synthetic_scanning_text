@@ -1,0 +1,21 @@
+{
+  "interference": [
+    {
+      "name": "random_resize",
+      "p": 0.8,
+      "opt": {
+        "min_rate": 0.8,
+        "max_rate": 1.0
+      }
+    },
+
+    {
+      "name": "random_rotation",
+      "p": 0.8,
+      "opt": {
+        "min_angle": -3,
+        "max_angle": 3
+      }
+    }
+  ]
+}
