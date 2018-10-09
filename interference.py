@@ -90,20 +90,74 @@ class RandomTranslate(Interference):
         Randomly move the content(text) of the image, along both x and y axises.
         **Keep text in image boundary**
         """
-        # todo cur_img?
-
 
     def interfere(self, img):
         # todo 随机平移
         #获取图片大小
+        img_input = img
         height, width = self.size()
         left, right, top, bottom = self.get_valid_rect()
-        return img
+        offset_x = None
+        offset_y = None
+        offset_x = rd.randint(-left, width - right) if offset_x is None else rd.randint(-offset_x, offset_x)
+        offset_y = rd.randint(-top, height - bottom) if offset_y is None else rd.randint(-offset_y, offset_y)
+        #缩放矩阵？
+        MatScale = np.float32([[1, 0, offset_x],
+                        [0, 1, offset_y]])
+        #调用的一个仿射方法
+        img_output = cv.warpAffine(img_input, MatScale, (img_input.shape[1], img_input.shape[0]))
+        return img_output
 
     def get_valid_rect(self, img):
         left_bounding = 0
-        ##?
-        right_bounding = img.shape[1]
+        #宽度-1
+        right_bounding = img.shape[1] - 1
+        top_bounding = 0
+        #高度-1
+        bottom_bounding = img.shape[0] - 1
+
+        left_found = False
+        for i in range(0, right_bounding, 1):
+            for px in self.cur_img[:, i]:
+                if px > 0:
+                    left_bounding = i
+                    left_found = True
+                    break
+            if left_found:
+                break
+
+        right_found = False
+        for i in range(right_bounding, -1, -1):
+            for px in self.cur_img[:, i]:
+                if px > 0:
+                    right_bounding = i
+                    right_found = True
+                    break
+            if right_found:
+                break
+
+        top_found = False
+        for i in range(0, bottom_bounding, 1):
+            for px in self.cur_img[i, :]:
+                if px > 0:
+                    top_bounding = i
+                    top_found = True
+                    break
+            if top_found:
+                break
+
+        bottom_found = False
+        for i in range(bottom_bounding, -1, -1):
+            for px in self.cur_img[i, :]:
+                if px > 0:
+                    bottom_bounding = i
+                    bottom_found = True
+                    break
+            if bottom_found:
+                break
+
+        return left_bounding, right_bounding, top_bounding, bottom_bounding
+
 
 class RandomNoise(Interference):
 
@@ -123,6 +177,7 @@ class RandomNoise(Interference):
 
     def interfere(self, img):
         # todo 增加噪点
+
         return img
 
 
