@@ -16,6 +16,7 @@ class Interference:
         :param y_num: (min_num, max_num) along height, border contained
         :return: a list containing `x_num` x `y_num` cells
         """
+        #获取图片的高和宽
         height, width = img.shape
         x = rd.randint(*x_num)
         y = rd.randint(*y_num)
@@ -50,11 +51,20 @@ class RandomTranslate(Interference):
         Randomly move the content(text) of the image, along both x and y axises.
         **Keep text in image boundary**
         """
+        # todo cur_img?
+
 
     def interfere(self, img):
         # todo 随机平移
+        #获取图片大小
+        height, width = self.size()
+        left, right, top, bottom = self.get_valid_rect()
         return img
 
+    def get_valid_rect(self, img):
+        left_bounding = 0
+        ##?
+        right_bounding = img.shape[1]
 
 class RandomNoise(Interference):
 
