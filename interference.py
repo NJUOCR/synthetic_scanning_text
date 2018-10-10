@@ -108,7 +108,7 @@ class RandomTranslate(Interference):
         offset_y = rd.randint(-top, height - bottom)
         # 仿射矩阵，平移
         mat_translation = np.float32([[1, 0, offset_x],
-                                        [0, 1, offset_y]])
+                                      [0, 1, offset_y]])
         # 调用的一个仿射方法
         img_output = cv.warpAffine(img_input, mat_translation, (img_input.shape[1], img_input.shape[0]))
         return img_output
@@ -136,7 +136,7 @@ class RandomNoise(Interference):
         w_rate = self.p
         w_range = (self.max_brightness, self.max_brightness)
         # np.nditer: numpy array自带的迭代器 参考网址：https://www.jianshu.com/p/f2bd63766204
-        for x in np.nditer(img, op_flags = ['readwrite']):
+        for x in np.nditer(img, op_flags=['readwrite']):
             if rd.random() < w_rate:
                 x[...] = rd.randint(*w_range)
         return img
@@ -160,8 +160,9 @@ class RandomResize(Interference):
         # CV_INTER_LINEAR ：雙線性插補(預設)
         interpolation = cv.INTER_LINEAR
         # interpolation：內插方式
-        img = cv.resize(img, (int(width * scale), int(height *scale)), interpolation=interpolation)
+        img = cv.resize(img, (int(width * scale), int(height * scale)), interpolation=interpolation)
         return img
+
 
 class Padding(Interference):
 
@@ -180,7 +181,7 @@ class Padding(Interference):
     def interfere(self, img):
         # todo 边缘补齐
         new_height, new_width = self.height, self.width
-        top =  left = bottom = right = 0
+        top = left = bottom = right = 0
         # 获取当前图片的宽度，高度
         cur_height, cur_width = img.shape
         if new_height > cur_height:
@@ -192,9 +193,9 @@ class Padding(Interference):
             left = (new_width - cur_width) // 2
             right = new_width - cur_width - left
         if top == 0 and bottom == 0 and left == 0 and right == 0:
-            print("no need for padding")
+            # print("no need for padding")
             return
-        img = cv.copyMakeBorder(img, top, bottom, left, right, cv.BORDER_CONSTANT, value=0)
+        img = cv.copyMakeBorder(img, top, bottom, left, right, cv.BORDER_CONSTANT, value=self.val)
         return img
 
 
@@ -211,42 +212,43 @@ class RandomRotation(Interference):
 
     def interfere(self, img):
         # todo 旋转
-        height = img.shape[0]
-        width = img.shape[1]
-        Mat = cv.getRotationMatrix2D((width / 2, height / 2), self.max_angle, self.max_angle)
-        output_img = cv.warpAffine(img, Mat, (width, height))
+        height, width = img.shape
+        angle = rd.random() * (self.max_angle - self.min_angle) + self.min_angle
+        mat = cv.getRotationMatrix2D((width / 2, height / 2), angle, 0.8)
+        output_img = cv.warpAffine(img, mat, (width, height))
         return output_img
 
 
 class RandomDilution(Interference):
 
-    def __init__(self, min_rate, max_rate):
+    def __init__(self, min_ratio, max_ratio):
         """
-        Dilute the whole image by a random rate between `min_rate` and `max_rate`
-        :param min_rate:
-        :param max_rate:
+        Dilute the whole image by a random ratio between `min_ratio` and `max_ratio`
+        :param min_ratio: <= 100
+        :param max_ratio: <= 100
         """
-        self.min_rate = min_rate
-        self.max_rate = max_rate
+        self.min_ratio = min_ratio
+        self.max_ratio = max_ratio
 
     def interfere(self, img):
         # todo 淡化
-        rate = rd.randint(self.min_rate, self.max_rate) / 100
-        img = img * rate
+        ratio = rd.randint(self.min_ratio, self.max_ratio) / 100
+        img = img * ratio
         return img
+
 
 class Stroke(Interference):
 
-    def __init__(self, thicker):
+    def __init__(self, thicker, kernel_size):
+        self.kernel_size = kernel_size
         self.thicker = thicker
 
     def interfere(self, img):
         # todo 笔画
         # 定义一个2*2的十字形结构
-        kernel = cv.getStructuringElement(cv.MORPH_RECT, (2, 2))
+        kernel = cv.getStructuringElement(cv.MORPH_RECT, (self.kernel_size, self.kernel_size))
         if self.thicker:
             output_img = cv.dilate(img, kernel)
         else:
             output_img = cv.erode(img, kernel)
-        return img
-
+        return output_img

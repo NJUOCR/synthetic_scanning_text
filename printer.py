@@ -1,11 +1,14 @@
-import numpy as np
-from PIL import ImageFont, Image, ImageDraw
-
 import re
+
+import numpy as np
+from PIL import ImageFont, ImageDraw, Image
+
+
 class Printer:
 
     def __init__(self, font_file: str, font_size: int):
-        font = ImageFont.truetype(font_file, font_size)
+        self.font_size = font_size
+        self.font = ImageFont.truetype(font_file, font_size)
 
     def print(self, width, height, text_gen: iter):
         """
@@ -15,24 +18,17 @@ class Printer:
         :param text_gen: a generator which yield text to draw upon the canvas
         :return: A generator, yielding `image` and `text`(label)
         """
-        for text in text_gen:
+        for text, seq_len in text_gen:
             # 生成元素值为255的数组
-            img = np.ones((height, width), dtype=float) * 255
+            # img = np.ones((height, width), dtype=float) * 255
+            img = Image.new("1", (width, height), 1)
             # todo 在空白图片上写入文字
 
             draw = ImageDraw.Draw(img)
-            width, height = img.shape
-            font_width, font_height = img.font_size
-            # ?
-            seq_len = len(text) - len(list(re.compile('\d|-').finditer(text)))/2
-            if width < seq_len * font_width or height < font_height:
-                print("text bigger than canvas: text => %s, canvas => (%d, %d), image => (%d, %d)" % (
-                text, width, height, font_width * len(text), font_height))
-
+            font_width = font_height = self.font_size
             padding_left = (width - seq_len * font_width) // 2
             padding_top = (height - font_height) // 2
-            draw.text((padding_left, padding_top), text, font = img.font)
+            draw.text((padding_left, padding_top), text, font=self.font)
 
-            return ((np.array(img.getdata()).astype(float))*255).reshape(height,width)
-
-            yield img,  text
+            # yield ((np.array(img.getdata()).astype(float)) * 255).reshape(height, width), text
+            yield ((np.array(img.getdata()).astype(np.uint8)) * 255).reshape(height, width), text
