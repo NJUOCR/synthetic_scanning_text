@@ -177,7 +177,13 @@ class RandomNoise(Interference):
 
     def interfere(self, img):
         # todo 增加噪点
-
+        # white_noise
+        w_rate = 0.005
+        w_range = (50, 110)
+        # np.nditer: numpy array自带的迭代器 参考网址：https://www.jianshu.com/p/f2bd63766204
+        for x in np.nditer(img, op_flags = ['readwrite']):
+            if rd.random() < w_rate:
+                x[...] = rd.randint(*w_range)
         return img
 
 
@@ -193,6 +199,14 @@ class RandomResize(Interference):
 
     def interfere(self, img):
         # todo 缩放
+        scale = 1.0
+        height, width = img.shape
+        # CV_INTER_LINEAR ：雙線性插補(預設)
+        interpolation = cv.INTER_LINEAR
+        # interpolation：內插方式
+        img = cv.resize(img, (int(width * scale), int(height *scale)), interpolation=interpolation)
+
+        return img
         pass
 
 
@@ -205,10 +219,30 @@ class Padding(Interference):
         :param height:
         :param val:
         """
+        # 新的图片的宽度，高度
+        self.width = width
+        self.height = height
         pass
 
     def interfere(self, img):
         # todo 边缘补齐
+        new_height, new_width = self.height, self.width
+        top =  left = bottom = right = 0
+        # 获取当前图片的宽度，高度
+        cur_height, cur_width = img.shape
+        if new_height > cur_height:
+            # 上下填充
+            top = (new_height - cur_height) // 2
+            bottom = new_height - cur_width - top
+        if new_width > cur_width:
+            # 左右填充
+            left = (new_width - cur_width) // 2
+            right = new_width - cur_width - left
+        if top == 0 and bottom == 0 and left == 0 and right == 0:
+            print("no need for padding")
+            return
+        img = cv.copyMakeBorder(img, top, bottom, left, right, cv.BORDER_CONSTANT, value=0)
+        return img
         pass
 
 
@@ -223,6 +257,8 @@ class RandomRotation(Interference):
 
     def interfere(self, img):
         # todo 旋转
+        
+
         pass
 
 
