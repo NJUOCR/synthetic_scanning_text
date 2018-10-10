@@ -133,8 +133,8 @@ class RandomNoise(Interference):
     def interfere(self, img):
         # todo 增加噪点
         # white_noise
-        w_rate = 0.005
-        w_range = (50, 110)
+        w_rate = self.p
+        w_range = (self.max_brightness, self.max_brightness)
         # np.nditer: numpy array自带的迭代器 参考网址：https://www.jianshu.com/p/f2bd63766204
         for x in np.nditer(img, op_flags = ['readwrite']):
             if rd.random() < w_rate:
@@ -150,20 +150,18 @@ class RandomResize(Interference):
         :param min_scale: should be larger than 0.0
         :param max_scale: should be smaller than or equal to 1.0
         """
-        pass
+        self.min_scale = min_scale
+        self.max_scale = max_scale
 
     def interfere(self, img):
         # todo 缩放
-        scale = 1.0
+        scale = rd.randint(self.min_scale, self.max_scale)
         height, width = img.shape
         # CV_INTER_LINEAR ：雙線性插補(預設)
         interpolation = cv.INTER_LINEAR
         # interpolation：內插方式
         img = cv.resize(img, (int(width * scale), int(height *scale)), interpolation=interpolation)
-
         return img
-        pass
-
 
 class Padding(Interference):
 
@@ -177,7 +175,7 @@ class Padding(Interference):
         # 新的图片的宽度，高度
         self.width = width
         self.height = height
-        pass
+        self.val = val
 
     def interfere(self, img):
         # todo 边缘补齐
@@ -198,7 +196,6 @@ class Padding(Interference):
             return
         img = cv.copyMakeBorder(img, top, bottom, left, right, cv.BORDER_CONSTANT, value=0)
         return img
-        pass
 
 
 class RandomRotation(Interference):
@@ -209,12 +206,16 @@ class RandomRotation(Interference):
         :param min_angle: better use a value smaller than 0 to make a clockwise rotation
         :param max_angle: better use a value larger than 0 to make a anti-clockwise rotation
         """
+        self.min_angle = min_angle
+        self.max_angle = max_angle
 
     def interfere(self, img):
         # todo 旋转
-        
-
-        pass
+        height = img.shape[0]
+        width = img.shape[1]
+        Mat = cv.getRotationMatrix2D((width / 2, height / 2), self.max_angle, self.max_angle)
+        output_img = cv.warpAffine(img, Mat, (width, height))
+        return output_img
 
 
 class RandomDilution(Interference):
@@ -225,7 +226,27 @@ class RandomDilution(Interference):
         :param min_rate:
         :param max_rate:
         """
+        self.min_rate = min_rate
+        self.max_rate = max_rate
 
     def interfere(self, img):
         # todo 淡化
-        pass
+        rate = rd.randint(self.min_rate, self.max_rate) / 100
+        img = img * rate
+        return img
+
+class Stroke(Interference):
+
+    def __init__(self, thicker):
+        self.thicker = thicker
+
+    def interfere(self, img):
+        # todo 笔画
+        # 定义一个2*2的十字形结构
+        kernel = cv.getStructuringElement(cv.MORPH_RECT, (2, 2))
+        if self.thicker:
+            output_img = cv.dilate(img, kernel)
+        else:
+            output_img = cv.erode(img, kernel)
+        return img
+
