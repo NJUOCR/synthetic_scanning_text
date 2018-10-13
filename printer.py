@@ -22,7 +22,15 @@ class Printer:
 
             # 绘图句柄
             draw = ImageDraw.Draw(img)
-            begin_x, begin_y = (10, 20)
+
+            # 获取字体的宽度，高度
+            font_width, font_height = self.font.getsize(text)
+
+            # 获取文字的offset位置,获取字体的大小
+            offsetx, offsety = self.font.getoffset(text)
+
+            # 实现居中，确定begin_x, begin_y位置，就能实现字居中
+            begin_x, begin_y = (width - font_width) // 2, (height - font_height) // 2
 
             # 绘图
             draw.text((begin_x, begin_y), text, font=self.font, fill="black")
