@@ -159,7 +159,7 @@ class RandomResize(Interference):
         self.max_scale = max_scale
 
     def interfere(self, img):
-        # todo 缩放
+        # fixme 缩放应该是float
         scale = rd.randint(self.min_scale, self.max_scale)
         height, width = img.shape
         # CV_INTER_LINEAR ：雙線性插補(預設)
