@@ -1,5 +1,3 @@
-import re
-
 import numpy as np
 from PIL import ImageFont, ImageDraw, Image
 
@@ -25,13 +23,13 @@ class Printer:
 
             # todo 在空白图片上写入文字
             # 生成空白图像,(宽度，高度 )
-            img = Image.new("RGB", (width, height), color="white")
+            img = Image.new("L", (width, height), color="white")
             # 绘图句柄
             draw = ImageDraw.Draw(img)
             font_width = font_height = self.font_size
-            beginX, beginY = (10, 20)
+            begin_x, begin_y = (10, 20)
             # 绘图
-            draw.text((beginX, beginY), text, font=self.font, fill="black")
+            draw.text((begin_x, begin_y), text, font=self.font, fill="black")
 
             '''
             padding_left = (width - seq_len * font_width) // 2

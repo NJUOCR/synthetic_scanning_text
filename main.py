@@ -3,7 +3,7 @@ from printer import Printer
 
 
 def text_generator():
-    #for i in range(200):
+    # for i in range(200):
         yield str("图片生成"), 1
 
 
