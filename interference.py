@@ -198,7 +198,6 @@ class Padding(Interference):
         img = cv.copyMakeBorder(img, top, bottom, left, right, cv.BORDER_CONSTANT, value=self.val)
         return img
 
-
 class RandomRotation(Interference):
 
     def __init__(self, min_angle, max_angle):
@@ -217,7 +216,6 @@ class RandomRotation(Interference):
         mat = cv.getRotationMatrix2D((width / 2, height / 2), angle, 0.8)
         output_img = cv.warpAffine(img, mat, (width, height))
         return output_img
-
 
 class RandomDilution(Interference):
 

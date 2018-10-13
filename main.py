@@ -3,15 +3,15 @@ from printer import Printer
 
 
 def text_generator():
-    for i in range(10):
-        yield str(i), 1
+    #for i in range(200):
+        yield str("图片生成"), 1
 
 
 def generate(config_file):
     # config = io.read_config(config_file)
     # todo 主体逻辑
     printer = Printer("fonts/fangsong_GB2312.ttf", 16)
-    for img, text in printer.print(16, 16, text_generator()):
+    for img, text in printer.print(500, 100, text_generator()):
         utils.save_sample("%s.jpg" % text, img)
 
 
