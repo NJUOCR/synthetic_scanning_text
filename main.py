@@ -11,7 +11,7 @@ def generate(config_file):
     # config = io.read_config(config_file)
     # todo 主体逻辑
     printer = Printer("fonts/fangsong_GB2312.ttf", 16)
-    for img, text in printer.print(500, 100, text_generator()):
+    for img, text in printer.print(100, 30, text_generator()):
         utils.save_sample("%s.jpg" % text, img)
 
 

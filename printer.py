@@ -17,25 +17,14 @@ class Printer:
         :return: A generator, yielding `image` and `text`(label)
         """
         for text, seq_len in text_gen:
-            # 生成元素值为255的数组
-            # img = np.ones((height, width), dtype=float) * 255
-            # img = Image.new("1", (width, height), 1)
+            # 生成空白图像, (宽度，高度 )
+            img = Image.new("1", (width, height), color="white")
 
-            # todo 在空白图片上写入文字
-            # 生成空白图像,(宽度，高度 )
-            img = Image.new("L", (width, height), color="white")
             # 绘图句柄
             draw = ImageDraw.Draw(img)
-            font_width = font_height = self.font_size
             begin_x, begin_y = (10, 20)
+
             # 绘图
             draw.text((begin_x, begin_y), text, font=self.font, fill="black")
-
-            '''
-            padding_left = (width - seq_len * font_width) // 2
-            print(padding_left)
-            padding_top = (height - font_height) // 2
-            draw.text((padding_left, padding_top), text, font=self.font)
-            '''
-            # yield ((np.array(img.getdata()).astype(float)) * 255).reshape(height, width), text
-            yield ((np.array(img.getdata()).astype(np.uint8)) * 255).reshape(height, width), text
+            im = (np.array(img.getdata()).astype(np.uint8)).reshape(height, width)
+            yield im, text
