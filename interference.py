@@ -7,6 +7,11 @@ import numpy as np
 class Interference:
 
     def interfere(self, img):
+        """
+
+        :param img:
+        :return: A tuple (out_img, random_val)
+        """
         raise Exception("interfere function not implement")
 
     @staticmethod
@@ -87,7 +92,7 @@ class RandomGaussianBlur(Interference):
     def interfere(self, img):
         r = rd.randint(self.min_r, self.max_r)
         sigma = rd.random() * self.sigma_range + self.sigma_bias
-        return cv.GaussianBlur(img, (r, r), sigma)
+        return cv.GaussianBlur(img, (r, r), sigma), None
 
 
 class RandomTranslate(Interference):
@@ -111,7 +116,7 @@ class RandomTranslate(Interference):
                                       [0, 1, offset_y]])
         # 调用的一个仿射方法
         img_output = cv.warpAffine(img_input, mat_translation, (img_input.shape[1], img_input.shape[0]))
-        return img_output
+        return img_output, (offset_x, offset_y)
 
 
 class RandomNoise(Interference):
@@ -139,7 +144,7 @@ class RandomNoise(Interference):
         for x in np.nditer(img, op_flags=['readwrite']):
             if rd.random() < w_rate:
                 x[...] = rd.randint(*w_range)
-        return img
+        return img, None
 
 
 class RandomResize(Interference):
@@ -161,7 +166,7 @@ class RandomResize(Interference):
         interpolation = cv.INTER_LINEAR
         # interpolation：內插方式
         img = cv.resize(img, (int(width * scale), int(height * scale)), interpolation=interpolation)
-        return img
+        return img, scale
 
 
 class Padding(Interference):
@@ -196,7 +201,8 @@ class Padding(Interference):
             # print("no need for padding")
             return
         img = cv.copyMakeBorder(img, top, bottom, left, right, cv.BORDER_CONSTANT, value=self.val)
-        return img
+        return img, None
+
 
 class RandomRotation(Interference):
 
@@ -210,12 +216,12 @@ class RandomRotation(Interference):
         self.max_angle = max_angle
 
     def interfere(self, img):
-        # todo 旋转
         height, width = img.shape
         angle = rd.random() * (self.max_angle - self.min_angle) + self.min_angle
         mat = cv.getRotationMatrix2D((width / 2, height / 2), angle, 0.8)
         output_img = cv.warpAffine(img, mat, (width, height))
-        return output_img
+        return output_img, angle
+
 
 class RandomDilution(Interference):
 
@@ -232,7 +238,7 @@ class RandomDilution(Interference):
         # todo 淡化
         ratio = rd.randint(self.min_ratio, self.max_ratio) / 100
         img = img * ratio
-        return img
+        return img, ratio
 
 
 class Stroke(Interference):
@@ -249,4 +255,4 @@ class Stroke(Interference):
             output_img = cv.dilate(img, kernel)
         else:
             output_img = cv.erode(img, kernel)
-        return output_img
+        return output_img, None
