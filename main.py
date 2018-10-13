@@ -8,7 +8,7 @@ def text_generator():
 
 
 def generate(config_file):
-    # config = io.read_config(config_file)
+    config = utils.read_config(config_file)
     # todo 主体逻辑
     printer = Printer("fonts/fangsong_GB2312.ttf", 16)
     for img, text in printer.print(100, 30, text_generator()):

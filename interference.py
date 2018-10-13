@@ -95,7 +95,7 @@ class RandomGaussianBlur(Interference):
         return cv.GaussianBlur(img, (r, r), sigma), None
 
 
-class RandomTranslate(Interference):
+class RandomTranslation(Interference):
 
     def __init__(self):
         """
@@ -121,25 +121,25 @@ class RandomTranslate(Interference):
 
 class RandomNoise(Interference):
 
-    def __init__(self, p, min_brightness, max_brightness):
+    def __init__(self, rate, min_val, max_val):
         """
         Add noise to image, every pixel in the image can be a noise pixel under the possibility `p`,
-        the brightness of the noise pixel is between `min_brightness` and `max_brightness`
+        the val of the noise pixel is between `min_val` and `max_val`
 
-        > Background noise or foreground noise is decided by the brightness
-        :param p: The possibility that one pixel in image is a noise pixel
-        :param min_brightness: the minimum brightness of a noise
-        :param max_brightness: the maximum brightness of a noise
+        > Background noise or foreground noise is decided by the val
+        :param rate: The possibility that one pixel in image is a noise pixel
+        :param min_val: the minimum val of a noise
+        :param max_val: the maximum val of a noise
         """
-        self.p = p
-        self.min_brightness = min_brightness
-        self.max_brightness = max_brightness
+        self.rate = rate
+        self.min_val = min_val
+        self.max_val = max_val
 
     def interfere(self, img):
         # todo 增加噪点
         # white_noise
-        w_rate = self.p
-        w_range = (self.max_brightness, self.max_brightness)
+        w_rate = self.rate
+        w_range = (self.max_val, self.max_val)
         # np.nditer: numpy array自带的迭代器 参考网址：https://www.jianshu.com/p/f2bd63766204
         for x in np.nditer(img, op_flags=['readwrite']):
             if rd.random() < w_rate:

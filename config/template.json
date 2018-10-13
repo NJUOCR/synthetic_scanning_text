@@ -1,5 +1,9 @@
 {
-  "interference": [
+  "fonts": [
+    "./fonts/fangsong_GB2312.ttf"
+  ],
+
+  "interference_ops": [
     {
       "name": "random_stroke",
       "p": 0.3,
@@ -13,8 +17,8 @@
       "name": "random_resize",
       "p": 0.8,
       "opt": {
-        "min_rate": 0.8,
-        "max_rate": 1.0
+        "min_scale": 0.8,
+        "max_scale": 1.0
       }
     },
 
@@ -40,6 +44,7 @@
       "name": "padding",
       "p": 1.0,
       "opt": {
+        "val": 255,
         "height": 64,
         "width": 512
       }
@@ -76,7 +81,7 @@
     },
 
     {
-      "name": "gaussian_blur",
+      "name": "random_gaussian_blur",
       "p": 0.8,
       "opt":{
         "min_r": 3,
