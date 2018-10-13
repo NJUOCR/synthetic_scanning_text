@@ -1,6 +1,15 @@
 {
   "interference": [
     {
+      "name": "random_stroke",
+      "p": 0.3,
+      "opt": {
+        "bolder": 0.3,
+        "plain": 0.3
+      }
+    },
+
+    {
       "name": "random_resize",
       "p": 0.8,
       "opt": {
@@ -13,8 +22,67 @@
       "name": "random_rotation",
       "p": 0.8,
       "opt": {
-        "min_angle": -3,
-        "max_angle": 3
+        "min_angle": -5,
+        "max_angle": 5
+      }
+    },
+
+    {
+      "name": "random_dilution",
+      "p": 0.9,
+      "opt": {
+        "min_ratio": 60,
+        "max_ratio": 100
+      }
+    },
+
+    {
+      "name": "padding",
+      "p": 1.0,
+      "opt": {
+        "height": 64,
+        "width": 512
+      }
+    },
+
+    {
+      "name": "random_translation",
+      "p": 1.0,
+      "opt": {
+
+      }
+    },
+
+    {
+      "comment": "白噪点",
+      "name": "random_noise",
+      "p": 0.1,
+      "opt": {
+        "rate": 0.005,
+        "min_val": 50,
+        "max_val": 110
+      }
+    },
+
+    {
+      "comment": "黑噪点",
+      "name": "random_noise",
+      "p": 0.8,
+      "opt": {
+        "rate": 0.02,
+        "min_val": 20,
+        "max_val": 50
+      }
+    },
+
+    {
+      "name": "gaussian_blur",
+      "p": 0.8,
+      "opt":{
+        "min_r": 3,
+        "max_r": 7,
+        "min_sigma": 0.5,
+        "max_sigma": 1.0
       }
     }
   ]
