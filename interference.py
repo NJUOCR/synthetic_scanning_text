@@ -241,18 +241,22 @@ class RandomDilution(Interference):
         return img, ratio
 
 
-class Stroke(Interference):
+class RandomStroke(Interference):
 
-    def __init__(self, thicker, kernel_size):
+    def __init__(self, bolder: float, plain: float, kernel_size: int):
         self.kernel_size = kernel_size
-        self.thicker = thicker
+        self.bolder = bolder
+        self.plain = plain
 
     def interfere(self, img):
         # todo 笔画
         # 定义一个2*2的十字形结构
         kernel = cv.getStructuringElement(cv.MORPH_RECT, (self.kernel_size, self.kernel_size))
-        if self.thicker:
+        if rd.random() < self.bolder:
             output_img = cv.dilate(img, kernel)
-        else:
+        elif self.bolder < rd.random() < self.bolder + self.plain:
             output_img = cv.erode(img, kernel)
+        else:
+            output_img = np.copy(img)
+
         return output_img, None
