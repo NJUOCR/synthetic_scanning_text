@@ -47,7 +47,6 @@ def read_config(config_file: str) -> dict:
 
         if cls is not None:
             ops.append((cls, operation['p']))
-    return {
-        'ops': ops,
-        'fonts': config['fonts']
-    }
+
+    config['ops'] = ops
+    return config

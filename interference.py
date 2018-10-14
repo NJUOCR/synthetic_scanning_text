@@ -25,27 +25,28 @@ class Interference:
         > FYI: image_height = bottom - top, image_width = right - left
         """
         h, w = img.shape
-        white_line = np.ones((h,), float) * 255
+        black_vertical = np.zeros((h, ), np.uint8)
+        black_horizontal = np.zeros((w, ), np.uint8)
         for left in range(w):
-            if not (img[:, left] == white_line).all():
+            if not (img[:, left] == black_vertical).all():
                 break
         else:
             left = None
 
         for right in range(w - 1, -1, -1):
-            if not (img[:, right] == white_line).all():
+            if not (img[:, right] == black_vertical).all():
                 break
         else:
             right = None
 
         for top in range(h):
-            if not (img[top, :] == white_line).all():
+            if not (img[top, :] == black_horizontal).all():
                 break
         else:
             top = None
 
         for bottom in range(h - 1, -1, -1):
-            if not (img[bottom, :] == white_line).all():
+            if not (img[bottom, :] == black_horizontal).all():
                 break
         else:
             bottom = None
@@ -93,7 +94,7 @@ class Inversion(Interference):
             out = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
         else:
             out = img
-        return 255 - out
+        return 255 - out, None
 
 
 class RandomGaussianBlur(Interference):
@@ -106,13 +107,14 @@ class RandomGaussianBlur(Interference):
         :param min_sigma: minimum sigma
         :param max_sigma: maximum sigma
         """
-        self.min_r = min_r
-        self.max_r = max_r
+        self.r_seeds = []
+        for r in range(min_r, max_r+1, 2):
+            self.r_seeds.append(r)
         self.sigma_range = max_sigma - min_sigma
         self.sigma_bias = min_sigma
 
     def interfere(self, img):
-        r = rd.randint(self.min_r, self.max_r)
+        r = self.r_seeds[rd.randint(0, len(self.r_seeds)-1)]
         sigma = rd.random() * self.sigma_range + self.sigma_bias
         return cv.GaussianBlur(img, (r, r), sigma), None
 
@@ -126,14 +128,15 @@ class RandomTranslation(Interference):
         """
 
     def interfere(self, img):
-        # todo 随机平移
         # 获取图片大小
         img_input = img
         height, width = img.shape
-        left, right, top, bottom = Interference.get_bounds(img)
+        import utils.uimg as uimg
+        top, left, bottom, right = Interference.get_bounds(img)
+
         offset_x = rd.randint(-left, width - right)
         offset_y = rd.randint(-top, height - bottom)
-        # 仿射矩阵，平移
+        # 仿射矩阵，移位矩阵
         mat_translation = np.float32([[1, 0, offset_x],
                                       [0, 1, offset_y]])
         # 调用的一个仿射方法
@@ -215,16 +218,15 @@ class Padding(Interference):
         if new_height > cur_height:
             # 上下填充
             top = (new_height - cur_height) // 2
-            bottom = new_height - cur_width - top
+            bottom = new_height - cur_height - top
         if new_width > cur_width:
             # 左右填充
             left = (new_width - cur_width) // 2
             right = new_width - cur_width - left
         if top == 0 and bottom == 0 and left == 0 and right == 0:
-            # print("no need for padding")
-            return
-        img = cv.copyMakeBorder(img, top, bottom, left, right, cv.BORDER_CONSTANT, value=self.val)
-        return img, None
+            return img, None
+        out = cv.copyMakeBorder(img, top, bottom, left,  right, cv.BORDER_CONSTANT, value=self.val)
+        return out, None
 
 
 class RandomRotation(Interference):
