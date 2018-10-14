@@ -27,7 +27,7 @@ class Printer:
             font_width, font_height = self.font.getsize(text)
 
             # 获取文字的offset位置,获取字体的大小
-            offsetx, offsety = self.font.getoffset(text)
+            # offsetx, offsety = self.font.getoffset(text)
 
             # 实现居中，确定begin_x, begin_y位置，就能实现字居中
             begin_x, begin_y = (width - font_width) // 2, (height - font_height) // 2
@@ -36,3 +36,12 @@ class Printer:
             draw.text((begin_x, begin_y), text, font=self.font, fill="black")
             im = (np.array(img.getdata()).astype(np.uint8)).reshape(height, width)
             yield im, text
+
+    def print_one(self, width, height, text):
+        im = Image.new("1", (width, height), color='black')
+        draw = ImageDraw.Draw(im)
+        text_width, text_height = self.font.getsize(text)
+        begin_x, begin_y = (width - text_width) // 2, (height - text_height) // 2
+        draw.text((begin_x, begin_y), text, font=self.font, fill="white")
+        img = (np.array(im.getdata()).astype(np.uint8)).reshape(height, width)
+        return img

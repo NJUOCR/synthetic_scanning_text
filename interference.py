@@ -74,6 +74,28 @@ class Interference:
         return grids
 
 
+class Inversion(Interference):
+
+    def __init__(self):
+        """
+        Inverse the input image
+        """
+
+    def interfere(self, img):
+        """
+
+        :param img: the input image, of which the mode should be `gray-scale`. An auto conversion will be
+        done otherwise.
+        :return: A gray-scale image
+        """
+        channel = img.shape[2]
+        if channel == 3:
+            out = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
+        else:
+            out = img
+        return 255 - out
+
+
 class RandomGaussianBlur(Interference):
 
     def __init__(self, min_r, max_r, min_sigma, max_sigma):
@@ -166,7 +188,7 @@ class RandomResize(Interference):
         # CV_INTER_LINEAR ：雙線性插補(預設)
         interpolation = cv.INTER_LINEAR
         # interpolation：內插方式
-        img = cv.resize(img, (float(width * scale), float(height * scale)), interpolation=interpolation)
+        img = cv.resize(img, (int(width * scale), int(height * scale)), interpolation=interpolation)
         return img, scale
 
 

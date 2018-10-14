@@ -24,7 +24,7 @@ def read_config(config_file: str) -> dict:
         opt = operation['opt']
         cls = None
         if name == 'random_stroke':
-            cls = itf.RandomStroke(opt["bolder"], opt["plain"], 3)
+            cls = itf.RandomStroke(opt["bolder"], opt["plain"], 2)
         elif name == 'random_resize':
             cls = itf.RandomResize(opt['min_scale'], opt['max_scale'])
         elif name == 'random_rotation':
