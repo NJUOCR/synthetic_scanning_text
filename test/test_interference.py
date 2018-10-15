@@ -5,7 +5,8 @@ import utils.utility as util
 import random as rd
 import numpy as np
 
-def init_img(font_path, font_size, canvas_width, canvas_height, txt_path, sen_len):
+def init_img(font_path, min_font_size, max_font_size,  canvas_width, canvas_height, txt_path, sen_len):
+    font_size = rd.randint(min_font_size, max_font_size)
     printer = Printer(font_path, font_size)
     img = printer.print_one(canvas_width, canvas_height, read_txt(txt_path, sen_len))
     return img
@@ -37,9 +38,9 @@ if __name__ == '__main__':
     config = util.read_config('config/template.json')
     ops = config['ops']
 
-    original_im = init_img(config['font']['files'][0], config['font']['size'], config['canvas']['width'], config['canvas']['height'], config['char_path']['path'], config['char_path']['sen_len'])
+    original_im = init_img(config['font']['files'][0], config['font']['min_size'], config['font']['max_size'], config['canvas']['width'], config['canvas']['height'], config['char_path']['path'], config['char_path']['sen_len'])
 
-    for i in range(20):
+    for i in range(5):
         im = np.copy(original_im)
         angle = 0
         for op, p in ops:
@@ -51,4 +52,4 @@ if __name__ == '__main__':
             im, val = rs
             if isinstance(op, RandomRotation):
                 angle = val
-        uimg.save("data/%d_%.4f.png" % (i, angle), im)
+        uimg.save("data/%d_%.4f.png" % (i, angle), uimg.reverse(im))

@@ -5,7 +5,8 @@
   },
 
   "font": {
-    "size": 24,
+    "min_size": 20,
+    "max_size": 24,
     "files": [
       "./fonts/fangsong_GB2312.ttf"
     ]
@@ -18,6 +19,13 @@
   },
 
   "interference_ops": [
+    {
+      "name": "inversion",
+      "p":1.0,
+      "opt":{
+      }
+    },
+
     {
       "name": "random_stroke",
       "p": 0.3,
@@ -68,7 +76,6 @@
       "name": "random_translation",
       "p": 1.0,
       "opt": {
-
       }
     },
 

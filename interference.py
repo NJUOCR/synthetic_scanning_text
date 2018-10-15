@@ -90,6 +90,7 @@ class Inversion(Interference):
         :return: A gray-scale image
         """
         channel = img.shape[2]
+        # 颜色空间转换函数
         if channel == 3:
             out = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
         else:
