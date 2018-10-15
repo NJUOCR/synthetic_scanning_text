@@ -15,12 +15,6 @@
     ]
   },
 
-  "char_path":{
-    "min_sen_len": 2,
-    "max_sen_len": 10,
-    "path":
-      "./text_seeds/char.txt"
-  },
 
   "interference_ops": [
     {
