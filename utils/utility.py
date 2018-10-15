@@ -44,7 +44,7 @@ def read_config(config_file: str) -> dict:
             cls = itf.RandomNoise(opt['rate'], opt['min_val'], opt['max_val'])
         elif name == 'random_gaussian_blur':
             cls = itf.RandomGaussianBlur(opt['min_r'], opt['max_r'], opt['min_sigma'], opt['max_sigma'])
-        elif name == 'inverse':
+        elif name == 'inversion':
             cls = itf.Inversion()
 
         if cls is not None:
