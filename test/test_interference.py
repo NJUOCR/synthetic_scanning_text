@@ -5,6 +5,16 @@ import utils.utility as util
 import random as rd
 import numpy as np
 
+def init_font(font_path, min_font_size, max_font_size):
+    font_size = rd.randint(min_font_size, max_font_size)
+    random_printer = rd.randint(0, len(font_path))
+    
+    printer0 = Printer(font_path[0], font_size)
+    printer1 = Printer(font_path[1], font_size)
+    printer2 = Printer(font_path[2], font_size)
+    printer3 = Printer(font_path[3], font_size)
+
+
 def init_img(font_path, min_font_size, max_font_size,  canvas_width, canvas_height, txt_path, min_sen_len, max_sen_len):
     font_size = rd.randint(min_font_size, max_font_size)
     printer = Printer(font_path, font_size)
