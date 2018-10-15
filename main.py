@@ -61,13 +61,13 @@ def generate_rotation(config_file="config/template.json", char_file='text_seeds/
     config_font = config['font']
     printer_dict = init_printer(config_font['min_size'], config_font['max_size'], config_font['files'])
 
-    def get_random_printer(font_size_range: tuple, font_file_num: int):
-        fsize = rd.randint(font_size_range[0], font_size_range[1] + 1)
-        fidx = rd.randint(0, font_file_num - 1)
-        return printer_dict[(fidx, fsize)]
+    def get_random_printer():
+        f_idx = rd.randint(0, len(config_font['files']) - 1)
+        f_size = rd.randint(config_font['min_size'], config_font['max_size'])
+        return printer_dict[(f_idx, f_size)]
 
     for i in range(config['number']):
-        printer = get_random_printer((config_font['min_size'], config_font['max_size']), len(config_font['files']))
+        printer = get_random_printer()
         text = read_txt(char_file, *sen_len_range)
         original_im = printer.print_one(config['canvas']['width'], config['canvas']['height'], text)
         im = np.copy(original_im)
