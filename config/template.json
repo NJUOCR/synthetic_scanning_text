@@ -20,12 +20,6 @@
 
 
   "interference_ops": [
-    {
-      "name": "inversion",
-      "p":1.0,
-      "opt":{
-      }
-    },
 
     {
       "name": "random_stroke",
@@ -111,6 +105,14 @@
         "max_r": 3,
         "min_sigma": 0.5,
         "max_sigma": 1.0
+      }
+    },
+
+
+    {
+      "name": "inversion",
+      "p":1.0,
+      "opt":{
       }
     }
   ]

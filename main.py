@@ -8,11 +8,8 @@ from printer import Printer
 def init_printer(min_font_size, max_font_size, font_files: list) -> dict:
     printer_dict = {}
     for font_size in range(min_font_size, max_font_size + 1):
-        print(font_files)
         for font_file_idx, font_file in enumerate(font_files):
             printer_dict[(font_file_idx, font_size)] = Printer(font_file, font_size)
-            print(font_file_idx)
-            print(font_size)
     return printer_dict
 
 
@@ -78,7 +75,7 @@ def generate_rotation(config_file="config/template.json", char_file='text_seeds/
             im, val = op.interfere(im)
             if isinstance(op, RandomRotation):
                 angle = val
-        uimg.save("%s/%d_%.4f.jpg" % (config['out'], i, angle), uimg.reverse(im))
+        uimg.save("%s/%d_%.4f.jpg" % (config['out'], i, angle), im)
 
 
 if __name__ == '__main__':
