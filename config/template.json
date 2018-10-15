@@ -11,7 +11,10 @@
     "min_size": 20,
     "max_size": 24,
     "files": [
-      "./fonts/fangsong_GB2312.ttf"
+      "./fonts/fangsong_GB2312.ttf",
+      "./fonts/msyh.ttf",
+      "./fonts/msyhbd.ttf",
+      "./fonts/simhei.ttf"
     ]
   },
 

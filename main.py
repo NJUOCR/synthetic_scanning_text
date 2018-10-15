@@ -1,18 +1,18 @@
 import random as rd
-
 import numpy as np
-
 import utils.uimg as uimg
 import utils.utility as util
 from interference import RandomRotation
 from printer import Printer
 
-
 def init_printer(min_font_size, max_font_size, font_files: list) -> dict:
     printer_dict = {}
     for font_size in range(min_font_size, max_font_size + 1):
+        print(font_files)
         for font_file_idx, font_file in enumerate(font_files):
             printer_dict[(font_file_idx, font_size)] = Printer(font_file, font_size)
+            print(font_file_idx)
+            print(font_size)
     return printer_dict
 
 

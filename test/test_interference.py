@@ -8,7 +8,7 @@ import numpy as np
 def init_font(font_path, min_font_size, max_font_size):
     font_size = rd.randint(min_font_size, max_font_size)
     random_printer = rd.randint(0, len(font_path))
-    
+
     printer0 = Printer(font_path[0], font_size)
     printer1 = Printer(font_path[1], font_size)
     printer2 = Printer(font_path[2], font_size)
@@ -31,7 +31,7 @@ def read_txt(txt_path, min_sen_len,max_sen_len):
     words_list = []
     with open(txt_path, 'r', encoding='utf-8') as f:
         data = f.readlines()  # txt中所有字符串读入data
-        # print(data)
+        # print(out)
         for line in data:
             line = line.strip()
             word = line.split(" ")
@@ -71,4 +71,4 @@ if __name__ == '__main__':
             im, val = rs
             if isinstance(op, RandomRotation):
                 angle = val
-        uimg.save("data/%d_%.4f.jpg" % (i, angle), uimg.reverse(im))
+        uimg.save("out/%d_%.4f.jpg" % (i, angle), uimg.reverse(im))
