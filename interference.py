@@ -132,7 +132,6 @@ class RandomTranslation(Interference):
         # 获取图片大小
         img_input = img
         height, width = img.shape
-        import utils.uimg as uimg
         top, left, bottom, right = Interference.get_bounds(img)
 
         offset_x = rd.randint(-left, width - right)
@@ -185,7 +184,6 @@ class RandomResize(Interference):
         self.max_scale = max_scale
 
     def interfere(self, img):
-        # fixme 缩放应该是float
         # 生成min_scale至max_scale之间的随机浮点数
         scale = rd.uniform(self.min_scale, self.max_scale)
         height, width = img.shape

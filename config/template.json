@@ -1,4 +1,7 @@
 {
+  "number": 10,
+  "out": "./out",
+
   "canvas": {
     "height": 32,
     "width": 256
@@ -13,7 +16,8 @@
   },
 
   "char_path":{
-    "sen_len": 10,
+    "min_sen_len": 2,
+    "max_sen_len": 10,
     "path":
       "./text_seeds/char.txt"
   },
