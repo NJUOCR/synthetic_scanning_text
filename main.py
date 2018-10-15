@@ -1,9 +1,13 @@
 import random as rd
+
 import numpy as np
+from progressbar import ProgressBar
+
 import utils.uimg as uimg
 import utils.utility as util
 from interference import RandomRotation
 from printer import Printer
+
 
 def init_printer(min_font_size, max_font_size, font_files: list) -> dict:
     printer_dict = {}
@@ -63,19 +67,21 @@ def generate_rotation(config_file="config/template.json", char_file='text_seeds/
         f_size = rd.randint(config_font['min_size'], config_font['max_size'])
         return printer_dict[(f_idx, f_size)]
 
-    for i in range(config['number']):
-        printer = get_random_printer()
-        text = read_txt(char_file, *sen_len_range)
-        original_im = printer.print_one(config['canvas']['width'], config['canvas']['height'], text)
-        im = np.copy(original_im)
-        angle = 0
-        for op, p in ops:
-            if rd.random() > p:
-                continue
-            im, val = op.interfere(im)
-            if isinstance(op, RandomRotation):
-                angle = val
-        uimg.save("%s/%d_%.4f.jpg" % (config['out'], i, angle), im)
+    with ProgressBar(max_value=config['number']) as bar:
+        for i in range(config['number']):
+            printer = get_random_printer()
+            text = read_txt(char_file, *sen_len_range)
+            original_im = printer.print_one(config['canvas']['width'], config['canvas']['height'], text)
+            im = np.copy(original_im)
+            angle = 0
+            for op, p in ops:
+                if rd.random() > p:
+                    continue
+                im, val = op.interfere(im)
+                if isinstance(op, RandomRotation):
+                    angle = val
+            uimg.save("%s/%d_%.4f.jpg" % (config['out'], i, angle), im)
+            bar.update(i + 1)
 
 
 if __name__ == '__main__':
