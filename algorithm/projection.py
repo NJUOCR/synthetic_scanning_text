@@ -14,9 +14,8 @@ def project(img, direction='vertical'):
     """
     dir = 0
     if direction == 'horizontal':
-        dir = 1;
+        dir = 1
     return hg.calculate_pixel(img, dir)
-
 
 
 def draw_projective_histogram(img, direction='both'):
@@ -31,3 +30,13 @@ def draw_projective_histogram(img, direction='both'):
     :return: A numpy array
     """
     temp_matrix = np.array(img)
+    per_col = project(temp_matrix, 'vertical')
+    per_row = project(temp_matrix, 'horizontal')
+    if direction == 'vertical':
+        return hg.vertical_merge(temp_matrix, per_col)
+    elif direction == 'horizontal':
+        return hg.horizontal_merge(temp_matrix, per_row)
+    else:
+        horizontal_matrix = hg.horizontal_merge(temp_matrix, per_row)
+        result_matrix = hg.vertical_merge(horizontal_matrix, per_col)
+        return result_matrix

@@ -17,7 +17,7 @@ def calculate_pixel(image, direction):
 def generate_matrix(dimension, direction):
     matrix = []
     if direction == 0:
-        matrix = np.zeros((dimension+50, 50))   # 每行
+        matrix = np.zeros((dimension, 50))   # 每行
     elif direction == 1:
         matrix = np.zeros((50, dimension))   # 每列
     matrix = np.add(matrix, 255)
@@ -29,7 +29,9 @@ def fill_matrix(image, pix_sum, direction):
     img_matrix = np.array(image)
     num = np.size(img_matrix, direction)
     temp_matrix = generate_matrix(num, direction)
-    pix_sum_norm = np.floor(pix_sum/max(pix_sum)*50) # 归一化到50
+    for i in range(50):
+        pix_sum = np.append(pix_sum, 0)
+    pix_sum_norm = np.floor(pix_sum/max(pix_sum)*50)  # 归一化到50
     for i in range(num):   # 填充
         if pix_sum[i] != 0:
             for j in range(int(pix_sum_norm[i])):
@@ -40,13 +42,19 @@ def fill_matrix(image, pix_sum, direction):
     return temp_matrix
 
 
-# 将矩阵拼接起来
-def image_merge(image, col_pix, row_pix):
+# 横向拼接矩阵
+def horizontal_merge(image, row_pix):
+    img_matrix = np.array(image)
+    ve_matrix = fill_matrix(img_matrix, row_pix, 0)
+    img_matrix = np.hstack((img_matrix, ve_matrix))
+    return img_matrix
+
+
+# 纵向拼接矩阵
+def vertical_merge(image, col_pix):
     img_matrix = np.array(image)
     ho_matrix = fill_matrix(image, col_pix, 1)
-    ve_matrix = fill_matrix(image, row_pix, 0)
     img_matrix = np.vstack((img_matrix, ho_matrix))
-    img_matrix = np.hstack((img_matrix, ve_matrix))
     return img_matrix
 
 
@@ -58,7 +66,7 @@ if __name__ == '__main__':
     # 计算每行的非白像素求和
     per_row = calculate_pixel(img, 1)
     # 获得结果矩阵
-    result_matrix = image_merge(img, per_col, per_row)
-    cv2.imshow('result_image', result_matrix)
+    # result_matrix = image_merge(img, per_col, per_row)
+    # cv2.imshow('result_image', result_matrix)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
