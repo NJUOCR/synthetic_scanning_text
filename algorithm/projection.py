@@ -12,10 +12,7 @@ def project(img, direction='vertical'):
     :param direction: `vertical` | `horizontal`
     :return: A numpy array with shape (1, )
     """
-    dir = 0
-    if direction == 'horizontal':
-        dir = 1
-    return hg.calculate_pixel(img, dir)
+    return hg.calculate_pixel(img, 1 if direction == 'horizontal' else 0)
 
 
 def draw_projective_histogram(img, direction='both'):
