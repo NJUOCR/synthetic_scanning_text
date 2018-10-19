@@ -50,14 +50,15 @@ def image_merge(image, col_pix, row_pix):
     return img_matrix
 
 
-# 读取图片: cv2.imread(路径,num) 其中num=0，为灰度图像；num=1为彩图
-img = cv2.imread('E:/tt.png', 0)
-# 计算每列的非白像素求和
-per_col = calculate_pixel(img, 0)
-# 计算每行的非白像素求和
-per_row = calculate_pixel(img, 1)
-# 获得结果矩阵
-result_matrix = image_merge(img, per_col, per_row)
-cv2.imshow('result_image', result_matrix)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+if __name__ == '__main__':
+    # 读取图片: cv2.imread(路径,num) 其中num=0，为灰度图像；num=1为彩图
+    img = cv2.imread('E:/tt.png', 0)
+    # 计算每列的非白像素求和
+    per_col = calculate_pixel(img, 0)
+    # 计算每行的非白像素求和
+    per_row = calculate_pixel(img, 1)
+    # 获得结果矩阵
+    result_matrix = image_merge(img, per_col, per_row)
+    cv2.imshow('result_image', result_matrix)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

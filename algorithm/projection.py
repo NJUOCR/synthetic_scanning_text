@@ -1,6 +1,8 @@
 """
 Please implement `projective histogram` here
 """
+import Histogram_Generator as hg
+import numpy as np
 
 
 def project(img, direction='vertical'):
@@ -10,6 +12,11 @@ def project(img, direction='vertical'):
     :param direction: `vertical` | `horizontal`
     :return: A numpy array with shape (1, )
     """
+    dir = 0
+    if direction == 'horizontal':
+        dir = 1;
+    return hg.calculate_pixel(img, dir)
+
 
 
 def draw_projective_histogram(img, direction='both'):
@@ -23,3 +30,4 @@ def draw_projective_histogram(img, direction='both'):
     :param direction: `vertical` | `horizontal` | `both`(default)
     :return: A numpy array
     """
+    temp_matrix = np.array(img)
