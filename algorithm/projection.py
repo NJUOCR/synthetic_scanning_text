@@ -7,6 +7,7 @@ import numpy as np
 
 # 计算横向或者竖向每列非白像素的个数，image:传入的图像; direction：0->列，1->行
 def calculate_pixel(image, direction):
+    # todo 自适应二值化后简化操作
     img_matrix = np.array(image)
     img_matrix = np.floor(img_matrix / 255)
     img_matrix = np.logical_not(img_matrix)
@@ -67,6 +68,7 @@ def project(img, direction='vertical'):
     :param direction: `vertical` | `horizontal`
     :return: A numpy array with shape (1, )
     """
+    # todo 自适应二值化
     return calculate_pixel(img, 1 if direction == 'horizontal' else 0)
 
 
@@ -96,13 +98,16 @@ def draw_projective_histogram(img, direction='both'):
 
 if __name__ == '__main__':
     # 读取图片: cv2.imread(路径,num) 其中num=0，为灰度图像；num=1为彩图
-    im = cv2.imread('E:/tt.png', 0)
+    im = cv2.imread('../test.jpg', 0)
+
     # 计算每列的非白像素求和
     _per_col = calculate_pixel(im, 0)
+
     # 计算每行的非白像素求和
     _per_row = calculate_pixel(im, 1)
+
     # 获得结果矩阵
-    # result_matrix = image_merge(img, per_col, per_row)
-    # cv2.imshow('result_image', result_matrix)
+    _result_matrix = draw_projective_histogram(im)
+    cv2.imshow('result_image', _result_matrix)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
