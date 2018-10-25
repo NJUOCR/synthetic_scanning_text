@@ -56,7 +56,7 @@ def read_txt(txt_path, min_sen_len, max_sen_len, space_frequency=0.3):
     return random_sen
 
 
-def generate_rotation(config_file="config/template.json", char_file='text_seeds/char.txt', sen_len_range=(2, 10)):
+def generate_rotation(config_file="config/rotation.json", char_file='text_seeds/char.txt', sen_len_range=(2, 10)):
     config = util.read_config(config_file)
     ops = config['ops']
     config_font = config['font']
@@ -84,5 +84,34 @@ def generate_rotation(config_file="config/template.json", char_file='text_seeds/
             bar.update(i + 1)
 
 
+def generate_single_char(config_file="config/single_char.json", char_file='text_seeds/char.txt'):
+    config = util.read_config(config_file)
+    ops = config['ops']
+    config_font = config['font']
+    printer_dict = init_printer(config_font['min_size'], config_font['max_size'], config_font['files'])
+
+    def get_random_printer():
+        f_idx = rd.randint(0, len(config_font['files']) - 1)
+        f_size = rd.randint(config_font['min_size'], config_font['max_size'])
+        return printer_dict[(f_idx, f_size)]
+
+    with ProgressBar() as bar:
+        with open(char_file, encoding='utf-8') as f:
+            for i, line in enumerate(f):
+                char = line.strip()
+                for j in range(config['number']):
+                    printer = get_random_printer()
+                    original_im = printer.print_one(config['canvas']['width'],
+                                                    config['canvas']['height'],
+                                                    char)
+                    im = np.copy(original_im)
+                    for op, p in ops:
+                        if rd.random() > p:
+                            continue
+                        im, val = op.interfere(im)
+                    uimg.save("%s/%d_%s.jpg" % (config['out'], i*config['number']+j, char), im)
+                    bar.update(bar.value+1)
+
 if __name__ == '__main__':
-    generate_rotation()
+    # generate_rotation()
+    generate_single_char()

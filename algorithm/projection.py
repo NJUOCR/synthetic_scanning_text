@@ -3,6 +3,7 @@ Please implement `projective histogram` here
 """
 import cv2
 import numpy as np
+from utils.uimg import show, save
 
 
 # 计算横向或者竖向每列非白像素的个数，image:传入的图像; direction：0->列，1->行
@@ -98,7 +99,7 @@ def draw_projective_histogram(img, direction='both'):
 
 if __name__ == '__main__':
     # 读取图片: cv2.imread(路径,num) 其中num=0，为灰度图像；num=1为彩图
-    im = cv2.imread('../test.jpg', 0)
+    im = cv2.imread('/usr/local/src/data/doc_imgs/2016津刑申3号.pdf/img-0005.jpg', 0)
 
     # 计算每列的非白像素求和
     _per_col = calculate_pixel(im, 0)
@@ -108,6 +109,4 @@ if __name__ == '__main__':
 
     # 获得结果矩阵
     _result_matrix = draw_projective_histogram(im)
-    cv2.imshow('result_image', _result_matrix)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    save('test.jpg', _result_matrix)

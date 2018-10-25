@@ -1,12 +1,15 @@
 {
+  "number": 10,
+  "out": "./out",
+
   "canvas": {
-    "height": 32,
-    "width": 256
+    "height": 64,
+    "width": 512
   },
 
   "font": {
-    "min_size": 20,
-    "max_size": 24,
+    "min_size": 40,
+    "max_size": 56,
     "files": [
       "./fonts/fangsong_GB2312.ttf",
       "./fonts/msyh.ttf",
@@ -15,20 +18,8 @@
     ]
   },
 
-  "char_path":{
-    "min_sen_len": 2,
-    "max_sen_len": 10,
-    "path":
-      "./text_seeds/char.txt"
-  },
 
   "interference_ops": [
-    {
-      "name": "inversion",
-      "p":1.0,
-      "opt":{
-      }
-    },
 
     {
       "name": "random_stroke",
@@ -71,8 +62,8 @@
       "p": 1.0,
       "opt": {
         "val": 0,
-        "height": 32,
-        "width": 256
+        "height": 64,
+        "width": 512
       }
     },
 
@@ -114,6 +105,14 @@
         "max_r": 3,
         "min_sigma": 0.5,
         "max_sigma": 1.0
+      }
+    },
+
+
+    {
+      "name": "inversion",
+      "p":1.0,
+      "opt":{
       }
     }
   ]

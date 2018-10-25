@@ -37,7 +37,7 @@ def read_config(config_file: str) -> dict:
         elif name == 'random_dilution':
             cls = itf.RandomDilution(opt['min_ratio'], opt['max_ratio'])
         elif name == 'padding':
-            cls = itf.Padding(opt['width'], opt['height'], opt['val'])
+            cls = itf.Padding(config['canvas']['width'], config['canvas']['height'], opt['val'])
         elif name == 'random_translation':
             cls = itf.RandomTranslation()
         elif name == 'random_noise':
@@ -46,6 +46,10 @@ def read_config(config_file: str) -> dict:
             cls = itf.RandomGaussianBlur(opt['min_r'], opt['max_r'], opt['min_sigma'], opt['max_sigma'])
         elif name == 'inversion':
             cls = itf.Inversion()
+        elif name == 'autobin':
+            cls = itf.AutoBin(opt['block'])
+        elif name == 'threshold':
+            cls = itf.Threshold(opt['val'])
 
         if cls is not None:
             ops.append((cls, operation['p']))

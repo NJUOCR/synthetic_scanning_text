@@ -133,6 +133,9 @@ class RandomTranslation(Interference):
         height, width = img.shape
         top, left, bottom, right = Interference.get_bounds(img)
 
+        if None in (top, left, bottom, right):
+            return img_input, (0, 0)
+
         offset_x = rd.randint(-left, width - right)
         offset_y = rd.randint(-top, height - bottom)
         # 仿射矩阵，移位矩阵
@@ -165,6 +168,7 @@ class RandomNoise(Interference):
         w_rate = self.rate
         w_range = (self.max_val, self.max_val)
         # np.nditer: numpy array自带的迭代器 参考网址：https://www.jianshu.com/p/f2bd63766204
+        # 按顺序遍历会出现噪点扎堆的请看
         for x in np.nditer(img, op_flags=['readwrite']):
             if rd.random() < w_rate:
                 x[...] = rd.randint(*w_range)
@@ -282,4 +286,31 @@ class RandomStroke(Interference):
         else:
             output_img = np.copy(img)
 
+        return output_img, None
+
+
+class AutoBin(Interference):
+    def __init__(self, block):
+        self.block = block
+
+    def interfere(self, img):
+        """
+        :param img:
+        :return:
+        """
+        # 读取图像，并转为灰度图
+        # img_grey = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        # 自适应二值化
+        img = img.astype(np.uint8)
+        img_at_mean = cv.adaptiveThreshold(img, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                           cv.THRESH_BINARY, self.block, 0)
+        return img_at_mean, None
+
+
+class Threshold(Interference):
+    def __init__(self, thresh):
+        self.thresh = thresh
+
+    def interfere(self, img):
+        _, output_img = cv.threshold(img, self.thresh, 255, cv.THRESH_BINARY)
         return output_img, None
