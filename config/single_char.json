@@ -1,0 +1,123 @@
+{
+  "number": 1000,
+  "out": "/usr/local/src/data/single_char",
+
+  "canvas": {
+    "height": 64,
+    "width": 64
+  },
+
+  "font": {
+    "min_size": 20,
+    "max_size": 48,
+    "files": [
+      "./fonts/fangsong_GB2312.ttf",
+      "./fonts/msyh.ttf",
+      "./fonts/simhei.ttf"
+    ]
+  },
+
+
+  "interference_ops": [
+
+    {
+      "name": "random_stroke",
+      "p": 0.3,
+      "opt": {
+        "bolder": 0.3,
+        "plain": 0.0
+      }
+    },
+
+    {
+      "name": "random_resize",
+      "p": 0.8,
+      "opt": {
+        "min_scale": 0.8,
+        "max_scale": 1.0
+      }
+    },
+
+    {
+      "name": "random_rotation",
+      "p": 0.8,
+      "opt": {
+        "min_angle": -5,
+        "max_angle": 5
+      }
+    },
+
+    {
+      "name": "random_dilution",
+      "p": 0.9,
+      "opt": {
+        "min_ratio": 75,
+        "max_ratio": 100
+      }
+    },
+
+    {
+      "name": "padding",
+      "p": 1.0,
+      "opt": {
+        "val": 0
+      }
+    },
+
+    {
+      "name": "random_translation",
+      "p": 1.0,
+      "opt": {
+      }
+    },
+
+    {
+      "comment": "白噪点",
+      "name": "random_noise",
+      "p": 0.8,
+      "opt": {
+        "rate": 0.01,
+        "min_val": 50,
+        "max_val": 110
+      }
+    },
+
+    {
+      "comment": "黑噪点",
+      "name": "random_noise",
+      "p": 0.2,
+      "opt": {
+        "rate": 0.005,
+        "min_val": 20,
+        "max_val": 50
+      }
+    },
+
+    {
+      "name": "random_gaussian_blur",
+      "comment": "min_r and max_r should be odd numbers",
+      "p": 0.8,
+      "opt":{
+        "min_r": 3,
+        "max_r": 3,
+        "min_sigma": 0.5,
+        "max_sigma": 1.0
+      }
+    },
+
+    {
+      "name":"autobin",
+      "p":1.0,
+      "opt":{
+        "block": 63
+      }
+    },
+
+    {
+      "name": "inversion",
+      "p":1.0,
+      "opt":{
+      }
+    }
+  ]
+}
