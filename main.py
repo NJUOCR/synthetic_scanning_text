@@ -10,6 +10,14 @@ from printer import Printer
 
 
 def init_printer(min_font_size, max_font_size, font_files: list) -> dict:
+    """
+    Generate `(max_font_size-min_font_size) * len(font_files)` `Printer` instances
+    :param min_font_size:
+    :param max_font_size:
+    :param font_files: paths of font files
+    :return: a `dict`, of which `key` is formed like `(font_file_path, font_size)`, indicating
+    the corresponding Printer instance.
+    """
     printer_dict = {}
     for font_size in range(min_font_size, max_font_size + 1):
         for font_file_idx, font_file in enumerate(font_files):
@@ -109,8 +117,9 @@ def generate_single_char(config_file="config/single_char.json", char_file='text_
                         if rd.random() > p:
                             continue
                         im, val = op.interfere(im)
-                    uimg.save("%s/%d_%s.jpg" % (config['out'], i*config['number']+j, char), im)
-                    bar.update(bar.value+1)
+                    uimg.save("%s/%d_%s.jpg" % (config['out'], i * config['number'] + j, char), im)
+                    bar.update(bar.value + 1)
+
 
 if __name__ == '__main__':
     # generate_rotation()
