@@ -1,6 +1,6 @@
 {
-  "number": 1000,
-  "out": "/usr/local/src/data/single_char",
+  "number": 1,
+  "out": "/usr/local/src/data/single_char_1106",
 
   "canvas": {
     "height": 64,
@@ -8,8 +8,8 @@
   },
 
   "font": {
-    "min_size": 20,
-    "max_size": 48,
+    "min_size": 36,
+    "max_size": 62,
     "files": [
       "./fonts/fangsong_GB2312.ttf",
       "./fonts/msyh.ttf",
@@ -106,8 +106,8 @@
     },
 
     {
-      "name":"autobin",
-      "p":1.0,
+      "name": "autobin",
+      "p": 1.0,
       "opt":{
         "block": 63
       }
