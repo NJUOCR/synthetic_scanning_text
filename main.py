@@ -1,12 +1,11 @@
 import random as rd
 
-import numpy as np
 from progressbar import ProgressBar
 
 import utils.uimg as uimg
 import utils.utility as util
-from interference import RandomRotation
 from printer import Printer
+from text_seeds.seed_manager import SeedManager
 
 
 def init_printer(min_font_size, max_font_size, font_files: list) -> dict:
@@ -45,51 +44,37 @@ def init_img(font_path, min_font_size, max_font_size, canvas_width, canvas_heigh
 
 
 # test read file
-def read_txt(txt_path, min_sen_len, max_sen_len, space_frequency=0.3):
+def read_txt(txt_path, min_sen_len, max_sen_len, space_frequency=0.3, dump_charmap_to: str = None):
+    """
+
+    :param dump_charmap_to: if it is not `None`, dump a charmap to this path
+    :param txt_path:
+    :param min_sen_len:
+    :param max_sen_len:
+    :param space_frequency: insert `space` with this frequency(probability)
+    :return:
+    """
     # 句子长度
     sen_len = rd.randint(min_sen_len, max_sen_len)
     random_sen = ""
     # 把汉字输入进一个数组中
-    words_list = []
+    seed_list = []
+    seed_aliases = []
     with open(txt_path, 'r', encoding='utf-8') as f:
         for line in f:
-            words_list.append(line.strip())
+            parts = line.strip('\n').split('\t')
+            seed = parts[0]
+            alias = parts[1] if len(parts) >= 1 else seed
+            seed_list.append(seed)
+            seed_aliases.append(alias)
 
     # 随机生成大小为sen_len大小的汉字数据
     for le in range(sen_len):
-        r = rd.randint(0, len(words_list) - 1)
-        char = words_list[r]
+        r = rd.randint(0, len(seed_list) - 1)
+        char = seed_list[r]
         space = " " if rd.random() < space_frequency else ""
         random_sen += (space + char)
     return random_sen
-
-
-def generate_rotation(config_file="config/rotation.json", char_file='text_seeds/char.txt', sen_len_range=(2, 10)):
-    config = util.read_config(config_file)
-    ops = config['ops']
-    config_font = config['font']
-    printer_dict = init_printer(config_font['min_size'], config_font['max_size'], config_font['files'])
-
-    def get_random_printer():
-        f_idx = rd.randint(0, len(config_font['files']) - 1)
-        f_size = rd.randint(config_font['min_size'], config_font['max_size'])
-        return printer_dict[(f_idx, f_size)]
-
-    with ProgressBar(max_value=config['number']) as bar:
-        for i in range(config['number']):
-            printer = get_random_printer()
-            text = read_txt(char_file, *sen_len_range)
-            original_im = printer.print_one(config['canvas']['width'], config['canvas']['height'], text)
-            im = np.copy(original_im)
-            angle = 0
-            for op, p in ops:
-                if rd.random() > p:
-                    continue
-                im, val = op.interfere(im)
-                if isinstance(op, RandomRotation):
-                    angle = val
-            uimg.save("%s/%d_%.4f.jpg" % (config['out'], i, angle), im)
-            bar.update(i + 1)
 
 
 def generate_single_char(config_file="config/single_char.json", char_file='text_seeds/char.txt'):
@@ -97,6 +82,7 @@ def generate_single_char(config_file="config/single_char.json", char_file='text_
     ops = config['ops']
     config_font = config['font']
     printer_dict = init_printer(config_font['min_size'], config_font['max_size'], config_font['files'])
+    sm = SeedManager().read(char_file, dump_charmap_to='./charmap.json', dump_aliasmap_to='./aliasmap.json')
 
     def get_random_printer():
         f_idx = rd.randint(0, len(config_font['files']) - 1)
@@ -104,23 +90,40 @@ def generate_single_char(config_file="config/single_char.json", char_file='text_
         return printer_dict[(f_idx, f_size)]
 
     with ProgressBar() as bar:
-        with open(char_file, encoding='utf-8') as f:
-            for i, line in enumerate(f):
-                char = line.strip()
-                for j in range(config['number']):
-                    printer = get_random_printer()
-                    original_im = printer.print_one(config['canvas']['width'],
-                                                    config['canvas']['height'],
-                                                    char)
-                    im = np.copy(original_im)
-                    for op, p in ops:
-                        if rd.random() > p:
-                            continue
-                        im, val = op.interfere(im)
-                    uimg.save("%s/%d_%s.jpg" % (config['out'], i * config['number'] + j, char), im)
-                    bar.update(bar.value + 1)
+        # with open(char_file, encoding='utf-8') as f:
+        #     for i, line in enumerate(f):
+        #         char = line.strip()
+        #         for j in range(config['number']):
+        #             printer = get_random_printer()
+        #             original_im = printer.print_one(config['canvas']['width'],
+        #                                             config['canvas']['height'],
+        #                                             char)
+        #             im = np.copy(original_im)
+        #             for op, p in ops:
+        #                 if rd.random() > p:
+        #                     continue
+        #                 im, val = op.interfere(im)
+        #             uimg.save("%s/%d_%s.jpg" % (config['out'], i * config['number'] + j, char), im)
+        #             bar.update(bar.value + 1)
+        idx = 0
+        for char, alias in sm.get_by_order():
+            for _ in range(config['number']):
+                printer = get_random_printer()
+                img = printer.print_one(config['canvas']['width'],
+                                        config['canvas']['height'],
+                                        char)
+                for op, p in ops:
+                    if rd.random() > p:
+                        continue
+                    img, val = op.interfere(img)
+                uimg.save("%s/%d_%s.jpg" % (config['out'], idx, alias), img)
+                idx += 1
+                bar.update(idx)
 
 
 if __name__ == '__main__':
     # generate_rotation()
-    generate_single_char()
+    # generate_single_char(config_file='./configs/punctuation.json',
+    #                      char_file='./text_seeds/punctuation.txt')
+    generate_single_char(config_file='configs/letter_digit.json',
+                         char_file='./text_seeds/letter_digit.txt')
