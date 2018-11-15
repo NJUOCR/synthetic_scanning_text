@@ -1,6 +1,6 @@
 {
-  "number": 500,
-  "out": "/usr/local/src/data/letter_digit/train",
+  "number": 2000,
+  "out": "/usr/local/src/data/letter_digit/letter_digit_2000",
   "seed": "./text_seeds/letter_digit.txt",
 
   "canvas": {

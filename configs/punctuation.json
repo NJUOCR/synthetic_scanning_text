@@ -1,6 +1,6 @@
 {
-  "number": 500,
-  "out": "/usr/local/src/data/punctuation/train",
+  "number": 100,
+  "out": "/usr/local/src/data/punctuation/val_100",
   "seed": "./text_seeds/punctuation_digit.txt",
 
   "canvas": {
@@ -9,7 +9,7 @@
   },
 
   "font": {
-    "min_size": 40,
+    "min_size": 50,
     "max_size": 62,
     "files": [
       "./fonts/fangsong_GB2312.ttf",
