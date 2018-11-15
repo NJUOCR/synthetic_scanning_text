@@ -1,6 +1,6 @@
 {
   "number": 2000,
-  "out": "/usr/local/src/data/letter_digit/letter_digit_2000",
+  "out": "/usr/local/src/data/letter_digit/letter_digit_1115",
   "seed": "./text_seeds/letter_digit.txt",
 
   "canvas": {
@@ -32,7 +32,7 @@
 
     {
       "name": "random_resize",
-      "p": 0.8,
+      "p": 0.0,
       "opt": {
         "min_scale": 0.8,
         "max_scale": 1.0
@@ -75,7 +75,7 @@
     {
       "comment": "白噪点",
       "name": "random_noise",
-      "p": 0.1,
+      "p": 0.0,
       "opt": {
         "rate": 0.005,
         "min_val": 50,
@@ -86,7 +86,7 @@
     {
       "comment": "黑噪点",
       "name": "random_noise",
-      "p": 0.1,
+      "p": 0.0,
       "opt": {
         "rate": 0.0025,
         "min_val": 20,
