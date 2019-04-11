@@ -1,19 +1,18 @@
 {
-  "number": 10,
-  "out": "./out",
+  "number": 1,
+  "out": "/usr/local/src/data/single_char_mostUsed",
 
   "canvas": {
     "height": 64,
-    "width": 512
+    "width": 64
   },
 
   "font": {
-    "min_size": 40,
-    "max_size": 56,
+    "min_size": 36,
+    "max_size": 62,
     "files": [
       "./fonts/fangsong_GB2312.ttf",
       "./fonts/msyh.ttf",
-      "./fonts/msyhbd.ttf",
       "./fonts/songti.ttf",
       "./fonts/simhei.ttf"
     ]
@@ -62,9 +61,7 @@
       "name": "padding",
       "p": 1.0,
       "opt": {
-        "val": 0,
-        "height": 64,
-        "width": 512
+        "val": 0
       }
     },
 
@@ -80,7 +77,7 @@
       "name": "random_noise",
       "p": 0.8,
       "opt": {
-        "rate": 0.02,
+        "rate": 0.01,
         "min_val": 50,
         "max_val": 110
       }
@@ -109,6 +106,13 @@
       }
     },
 
+    {
+      "name": "autobin",
+      "p": 1.0,
+      "opt":{
+        "block": 63
+      }
+    },
 
     {
       "name": "inversion",
